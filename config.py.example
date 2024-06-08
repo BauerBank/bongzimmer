@@ -1,0 +1,18 @@
+from escpos.printer import Usb, Escpos
+
+def connect_to_printer() -> Escpos:
+    return Usb(0x1a86, 0x7584, timeout=0, in_ep=0x81, out_ep=0x02)
+
+config = {
+    "imap_server": "mail.example.net",
+    "imap_email": "bongzimmer@example.net",
+    "imap_password": "password",
+    "imap_directory": "INBOX",
+
+    "wrap_width": 42,
+    "chunk_size": 4000,
+    "chunk_time": 1.0,
+
+    "health_url": "http://health.example.com/bongzimmer",
+    "health_timeout": 10,
+}

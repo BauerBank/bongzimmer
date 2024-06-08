@@ -1,0 +1,2 @@
+escpos==1.9
+Requests==2.29.0
