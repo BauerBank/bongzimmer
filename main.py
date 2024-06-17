@@ -19,11 +19,13 @@ p = connect_to_printer()
 # p.cut()
 
 async def fetch_emails():
-    try:
-        requests.get(config["health_url"], timeout=config["health_timeout"])
-    except requests.RequestException:
-        # Log ping failure here...
-        logging.exception("Ping failed")
+
+    if config["health_url"] != "http://health.example.com/bongzimmer":
+        try:
+            requests.get(config["health_url"], timeout=config["health_timeout"])
+        except requests.RequestException:
+            # Log ping failure here...
+            logging.exception("Ping failed")
     
     # Login to the email server
     logging.debug("Logging into the IMAP server")
