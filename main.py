@@ -5,6 +5,9 @@ from datetime import datetime
 import asyncio
 import requests
 import logging
+from pygame import mixer
+import glob
+import random
 
 from config import connect_to_printer, config
 
@@ -13,10 +16,21 @@ CHUNK_SIZE = config["chunk_size"]
 CHUNK_TIME = config["chunk_time"]
 MAX_SIZE = WRAP_WIDTH * 250
 
+MUSIC_PATH = config["music_path"]
+
+mixer.init()
+
 p = connect_to_printer()
 
 # p.text("HaDiKo-L printer up.....")
 # p.cut()
+
+def play_sound():
+    files = glob.glob("MUSIC_PATH/*.mp3")
+    random_number = int(random.uniform(0,len(files)-1))
+    filename = files[random_number]
+    mixer.music.load(filename)
+    mixer.music.play()
 
 async def fetch_emails():
 
@@ -73,6 +87,8 @@ async def fetch_emails():
 
         to_print_chunks = [to_print[i:i+CHUNK_SIZE] for i in range(0, len(to_print), CHUNK_SIZE)]
 
+        play_sound()
+        
         for chunk in to_print_chunks:
             chunk = chunk.encode('cp437', errors='replace')
             #chunk = chunk.decode('cp437', errors='replace')

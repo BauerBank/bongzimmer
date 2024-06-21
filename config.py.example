@@ -15,4 +15,6 @@ config = {
 
     "health_url": "http://health.example.com/bongzimmer",
     "health_timeout": 10,
+    
+    "music_path": ".music/",
 }
