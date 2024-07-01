@@ -26,7 +26,7 @@ p = connect_to_printer()
 # p.cut()
 
 def play_sound():
-    files = glob.glob("MUSIC_PATH/*.mp3")
+    files = glob.glob(MUSIC_PATH+"*.mp3")
     random_number = int(random.uniform(0,len(files)-1))
     filename = files[random_number]
     mixer.music.load(filename)
