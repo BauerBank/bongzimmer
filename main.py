@@ -8,6 +8,7 @@ import logging
 from pygame import mixer
 import glob
 import random
+import telegram
 
 from config import connect_to_printer, config
 
@@ -21,6 +22,8 @@ MUSIC_PATH = config["music_path"]
 mixer.init()
 
 p = connect_to_printer()
+
+bot = telegram.Bot(token=config["tg_token"])
 
 # p.text("HaDiKo-L printer up.....")
 # p.cut()
@@ -53,6 +56,20 @@ def print_out(to_print, body=""):
         time.sleep(CHUNK_TIME)
 
     p.cut()
+
+async def check_telegram():
+    global LAST_UPDATE_ID
+    updates = await bot.getUpdates()
+    for update in updates:
+        if update.message is not None and (update.message.message_id > LAST_UPDATE_ID):
+            LAST_UPDATE_ID = update.message.message_id
+            if update.message.text[-5:].lower() == "start" or update.message.text[-4:].lower() == "help" or update.message.text[-4:].lower() == "test":
+                reply_text = "Hello " + update.message.from_user.first_name + ",\nWelcome to Weizenbierfreunde F3!"
+            else:
+                to_print = "Telegram message from: " + update.message.chat.first_name + "\n\n" + update.message.text
+                print_out(to_print)
+                reply_text = "Hello " + update.message.from_user.first_name + ",\nThanks, your message was sent to the printer!"
+            await bot.sendMessage(chat_id=update.message.chat.id, text=reply_text)
 
 async def fetch_emails():
 
@@ -107,12 +124,19 @@ async def fetch_emails():
 
 
 async def main():
-    logging.basicConfig(level="DEBUG", format="%(asctime)s :: %(levelname)s :: %(message)s")
+    logging.basicConfig(level="WARNING", format="%(asctime)s :: %(levelname)s :: %(message)s")
+
+    # get newest update id
+    global LAST_UPDATE_ID
+    updates = await bot.getUpdates()
+    if updates[-1].message is not None:
+        LAST_UPDATE_ID = updates[-1].message.message_id
 
     # Keep the main thread running
     while True:
         try:
             await fetch_emails()
+            await check_telegram()
         except Exception:
             logging.exception("exception occurred")
             continue

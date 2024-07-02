@@ -5,3 +5,4 @@ venv
 .vscode
 .DS_Store
 nohup.out
+test.py
