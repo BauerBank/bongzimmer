@@ -32,6 +32,28 @@ def play_sound():
     mixer.music.load(filename)
     mixer.music.play()
 
+def print_out(to_print, body=""):
+    # Sanity check: Length
+    if len(body) < MAX_SIZE:
+        to_print += body
+    else:
+        to_print += body[:MAX_SIZE]
+        to_print += "...\n\nMESSAGE TOO LONG"
+
+    logging.info("Received Message, printing:\n\n" + to_print)
+
+    to_print_chunks = [to_print[i:i+CHUNK_SIZE] for i in range(0, len(to_print), CHUNK_SIZE)]
+
+    play_sound()
+    
+    for chunk in to_print_chunks:
+        chunk = chunk.encode('cp437', errors='replace')
+        #chunk = chunk.decode('cp437', errors='replace')
+        p._raw(chunk)
+        time.sleep(CHUNK_TIME)
+
+    p.cut()
+
 async def fetch_emails():
 
     if config["health_url"] != "http://health.example.com/bongzimmer":
@@ -76,26 +98,7 @@ async def fetch_emails():
         # Print the email details to the console
         to_print = 'From: ' + email_message['From'] + '\n' + 'Subject: ' + email_message['Subject'] + '\n' + 'Date: ' + date_time_obj.strftime("%Y-%m-%d %H:%M:%S %Z") + '\n\n'
 
-        # Sanity check: Length
-        if len(body) < MAX_SIZE:
-            to_print += body
-        else:
-            to_print += body[:MAX_SIZE]
-            to_print += "...\n\nMESSAGE TOO LONG"
-
-        logging.info("Received Message, printing:\n\n" + to_print)
-
-        to_print_chunks = [to_print[i:i+CHUNK_SIZE] for i in range(0, len(to_print), CHUNK_SIZE)]
-
-        play_sound()
-        
-        for chunk in to_print_chunks:
-            chunk = chunk.encode('cp437', errors='replace')
-            #chunk = chunk.decode('cp437', errors='replace')
-            p._raw(chunk)
-            time.sleep(CHUNK_TIME)
-
-        p.cut()
+        print_out(to_print, body)
 
     logging.debug("done fetching and printing mails")
     # Logout from the email server

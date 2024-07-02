@@ -17,4 +17,6 @@ config = {
     "health_timeout": 10,
     
     "music_path": ".music/",
+
+    "tg_token": "TELEGRAM_TOKEN"
 }
