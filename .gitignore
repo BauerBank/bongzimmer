@@ -6,3 +6,4 @@ venv
 .DS_Store
 nohup.out
 test.py
+allowed_telegram_users.txt

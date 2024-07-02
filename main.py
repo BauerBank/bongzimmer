@@ -59,17 +59,22 @@ def print_out(to_print, body=""):
 
 async def check_telegram():
     global LAST_UPDATE_ID
+    file = open('allowed_telegram_users.txt','r')
+    allowed_chat_ids = file.read().split(',')
     updates = await bot.getUpdates()
     for update in updates:
         if update.message is not None and (update.message.message_id > LAST_UPDATE_ID):
             LAST_UPDATE_ID = update.message.message_id
-            if update.message.text[-5:].lower() == "start" or update.message.text[-4:].lower() == "help" or update.message.text[-4:].lower() == "test":
-                reply_text = "Hello " + update.message.from_user.first_name + ",\nWelcome to Weizenbierfreunde F3!"
+            if update.message.chat.username in allowed_chat_ids:
+                if update.message.text[-5:].lower() == "start" or update.message.text[-4:].lower() == "help" or update.message.text[-4:].lower() == "test":
+                    reply_text = "Hello " + update.message.from_user.first_name + ",\nWelcome to Weizenbierfreunde F3!"
+                else:
+                    to_print = "Telegram message from: " + update.message.chat.first_name + "\n\n" + update.message.text
+                    print_out(to_print)
+                    reply_text = "Hello " + update.message.from_user.first_name + ",\nThanks, your message was sent to the printer!"
+                await bot.sendMessage(chat_id=update.message.chat.id, text=reply_text)
             else:
-                to_print = "Telegram message from: " + update.message.chat.first_name + "\n\n" + update.message.text
-                print_out(to_print)
-                reply_text = "Hello " + update.message.from_user.first_name + ",\nThanks, your message was sent to the printer!"
-            await bot.sendMessage(chat_id=update.message.chat.id, text=reply_text)
+                await bot.sendMessage(chat_id=update.message.chat.id, text="Sorry, that's not allowed.")
 
 async def fetch_emails():
 

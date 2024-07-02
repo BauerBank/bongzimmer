@@ -67,3 +67,6 @@ sudo systemctl daemon-reload
 sudo systemctl enable bongzimmer.service
 sudo systemctl start bongzimmer.service
 ```
+
+## Telegram Bot
+Nachrichten an https://t.me/wbff3_printer_bot werden ausgedruckt, wenn der Username in ``allowed_telegram_users.txt`` eingetragen ist.
