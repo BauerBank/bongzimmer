@@ -67,7 +67,10 @@ async def check_telegram():
             LAST_UPDATE_ID = update.message.message_id
             if update.message.chat.username in allowed_chat_ids:
                 if update.message.text[-5:].lower() == "start" or update.message.text[-4:].lower() == "help" or update.message.text[-4:].lower() == "test":
-                    reply_text = "Hello " + update.message.from_user.first_name + ",\nWelcome to Weizenbierfreunde F3!"
+                    reply_text = "Hello " + update.message.from_user.first_name + ",\nWelcome to Weizenbierfreunde F3!\nTest sound with \ping\nSend a message to the printer with your text!"
+                elif update.message.text[-4:].lower() == "ping":
+                    play_sound()
+                    reply_text = "Hello " + update.message.from_user.first_name + ", ping successful!"
                 else:
                     to_print = "Telegram message from: " + update.message.chat.first_name + "\n\n" + update.message.text
                     print_out(to_print)
