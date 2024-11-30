@@ -54,7 +54,7 @@ Kopiere Folgenden hinhalt und passe den pfad zu main.py und den nutzer an.
 ```
 [Unit]
 Description=Bongzimmer
-After=default.target
+After=multi-user.target
 
 [Service]
 Type=simple
@@ -67,7 +67,7 @@ Environment="PATH=/usr/local/bin:/usr/bin:/bin"
 Environment="PULSE_SERVER=unix:/run/user/1000/pulse/native"
 
 [Install]
-WantedBy=default.target
+WantedBy=multi-user.target
 ```
 
 Starte und enabel den Service
