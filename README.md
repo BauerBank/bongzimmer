@@ -1,7 +1,9 @@
 # bongzimmer
+
 Skript für e-mail Bondrucker
 
 ## Install Dependencies
+
 sudo is importend!
 
 ```
@@ -20,11 +22,13 @@ sudo pip install Requests==2.29.0
 4. Passe die IMAP einträge an (health url it optional)
 
 ## Udev Rules
+
 Damit dasSkript zugriff auf den Drucker hat muss einen udev Ruel erstellt werden.
 
 ```
 sudo nano /etc/udev/rules.d/99-usbftdi.rules
 ```
+
 Kopiere Folgende Zeile in die Datei und passe die Vendore ID an
 
 ```
@@ -32,34 +36,40 @@ SUBSYSTEM=="usb", ATTRS{idVendor}=="04b8", MODE="0666"
 ```
 
 Füre folgenden Command aus zum neuladen der udev rules
+
 ```
 sudo udevadm control --reload-rules && sudo udevadm trigger
 ```
 
 ## Systemd
+
 Damit das Skript automatisch startet und im Hintergrund läuft wird ein Systemd service benötigt.
+
 ```
 sudo nano /etc/systemd/system/bongzimmer.service
 ```
+
 Kopiere Folgenden hinhalt und passe den pfad zu main.py und den nutzer an.
 
 ```
 [Unit]
 Description=Bongzimmer
-After=deault.target
+After=default.target
 
 [Service]
 Type=simple
-Restart=always
-# Ab hier anpassen
+Environment="SDL_AUDIODRIVER=pulse" 
 WorkingDirectory=/home/flurf3/git/bongzimmer/
-ExecStart=/usr/bin/python3 /home/flurf3/git/bongzimmer/main.py
+ExecStart=/usr/bin/python /home/flurf3/git/bongzimmer/main.py
 User=flurf3
+Restart=always
+Environment="PATH=/usr/local/bin:/usr/bin:/bin"
+Environment="PULSE_SERVER=unix:/run/user/1000/pulse/native"
 
 [Install]
 WantedBy=default.target
-
 ```
+
 Starte und enabel den Service
 
 ```
@@ -69,4 +79,6 @@ sudo systemctl start bongzimmer.service
 ```
 
 ## Telegram Bot
-Nachrichten an https://t.me/wbff3_printer_bot werden ausgedruckt, wenn der Username in ``allowed_telegram_users.txt`` eingetragen ist.
+
+Nachrichten an <https://t.me/wbff3_printer_bot> werden ausgedruckt, wenn der Username in ``allowed_telegram_users.txt`` eingetragen ist.
+

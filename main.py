@@ -9,6 +9,7 @@ from pygame import mixer
 import glob
 import random
 import telegram
+import os
 
 from config import connect_to_printer, config
 
@@ -19,7 +20,17 @@ MAX_SIZE = WRAP_WIDTH * 250
 
 MUSIC_PATH = config["music_path"]
 
+# Set SDL to use ALSA or a specific audio device
+os.environ["SDL_AUDIODRIVER"] = "pulse"
+# If you want to specify a particular device (like HDMI or analog), use the following
+# os.environ["SDL_AUDIODRIVER"] = "pulse"  # Use PulseAudio if it's available
+# os.environ["SDL_AUDIODRIVER"] = "hdmi"   # Try setting it to HDMI if needed
+
 mixer.init()
+
+test = mixer.get_init
+
+print(test)
 
 p = connect_to_printer()
 
