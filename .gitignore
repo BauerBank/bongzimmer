@@ -7,3 +7,4 @@ venv
 nohup.out
 test.py
 allowed_telegram_users.txt
+allowed_telegram_users.txt.save
